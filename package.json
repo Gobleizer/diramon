@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node ./src/index.js",
-    "test": "node --experimental-vm-modules $(yarn bin jest) ./test/directory.test.js",
+    "test": "node --experimental-vm-modules $(yarn bin jest) ./src/test/directory.test.js",
     "lint": "eslint ./src"
   },
   "devDependencies": {
