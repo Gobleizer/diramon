@@ -1,0 +1,24 @@
+{
+  "name": "diramon",
+  "packageManager": "yarn@4.4.0",
+  "version": "1.0.0",
+  "main": "directories.js",
+  "type": "module",
+  "repository": {
+    "url": "github.com/Gobleizer/diramon",
+    "type": "git"
+  },
+  "scripts": {
+    "start": "node directories.js",
+    "test": "jest",
+    "lint": "eslint directories.js"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0"
+  }
+}
