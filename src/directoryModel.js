@@ -21,6 +21,10 @@ export function createDirectory (name) {
 }
 
 export function listDirectories () {
-  printDirectory(root)
+  if (root.children.size > 0) {
+    root.children.forEach((child) => printDirectory(child))
+  }
 }
+
 const root = new Directory('root')
+// handle errors
