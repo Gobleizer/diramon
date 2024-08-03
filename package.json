@@ -11,11 +11,11 @@
   "scripts": {
     "start": "node directories.js",
     "test": "jest",
-    "lint": "eslint directories.js"
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
-    "eslint": "^8.0.1",
+    "eslint": "^9.8.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",

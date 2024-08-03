@@ -1,6 +1,9 @@
 {
-    "eslint.workingDirectories": [
-        { "mode": "auto" }
-    ],
-    "eslint.codeActionsOnSave.rules": null
+  "npm.packageManager": "yarn",
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "eslint.nodePath": ".yarn/sdks",
+  "javascript.validate.enable": false
 }
