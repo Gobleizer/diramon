@@ -24,6 +24,7 @@ describe('Test Directory commands', () => {
   function endChildProcess (childProcess) {
     childProcess.kill('SIGINT')
   }
+
   beforeEach(() => {
     testProcess = createChildProcess()
     prepareChildProcessForWrite(testProcess)
