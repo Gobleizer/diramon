@@ -1,36 +1,6 @@
+import Directory from './directoryClass.js'
 import printDirectory from './directoryView.js'
 import { InvalidPathError } from './directoryError.js'
-
-class Directory {
-  constructor (name) {
-    this.name = name
-    this.children = new Map([])
-  }
-
-  addChild (child) {
-    this.children.set(child.name, child)
-  }
-
-  deleteChild (child) {
-    this.children.delete(child.childName)
-  }
-
-  deleteChildByName (childName) {
-    this.children.delete(childName)
-  }
-
-  hasChildByName (childName) {
-    return this.children.has(childName)
-  }
-
-  getChildByName (childName) {
-    return this.children.get(childName)
-  }
-
-  getChildrenNamesAlphabetically () {
-    return this.children.keys().toArray().sort()
-  }
-}
 
 function verifyPath (currentDirectory, directoryList, index = 0) {
   if (currentDirectory.hasChildByName(directoryList[index])) {
