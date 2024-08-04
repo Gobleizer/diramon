@@ -1,11 +1,18 @@
 import { createDirectory, listDirectories, deleteDirectory, moveDirectory } from './directoryModel.js'
-import { InvalidCommandError } from './directoryError.js'
+import { InvalidCommandError, IncompatibleNumberOfArgumentsError } from './directoryError.js'
 
 const commandRouter = {
   create: createDirectory,
   list: listDirectories,
   delete: deleteDirectory,
   move: moveDirectory
+}
+
+const argRequirement = {
+  create: 1,
+  list: 0,
+  delete: 1,
+  move: 2
 }
 
 export const VALID_COMMANDS = Object.keys(commandRouter)
@@ -16,6 +23,7 @@ export function parseCommand (command) {
   const arg1 = words[1]
   const arg2 = words[2]
   commandKey = verifyCommand(commandKey)
+  verifyNumberOfArguments(commandKey, words.slice(1))
   commandRouter[commandKey](arg1, arg2)
 }
 
@@ -32,5 +40,17 @@ export function verifyCommand (command) {
     return command
   } else {
     throw new InvalidCommandError(`${command} is not a valid command`, `${command} is not a valid command`, command)
+  }
+}
+
+function verifyNumberOfArguments (command, inputArgs) {
+  if (inputArgs.length < argRequirement[command]) {
+    throw new IncompatibleNumberOfArgumentsError(`Too few arguments for ${command} command`, `Too few arguments for ${command}`, command)
+  }
+  if (inputArgs.length > argRequirement[command]) {
+    throw new IncompatibleNumberOfArgumentsError(`Too many arguments for ${command} command`, `Too many arguments for ${command}`, command)
+  }
+  if (inputArgs.length === argRequirement[command]) {
+    return true
   }
 }

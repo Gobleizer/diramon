@@ -14,6 +14,10 @@ export class InvalidCommandError extends CustomError {
 
 }
 
+export class IncompatibleNumberOfArgumentsError extends CustomError {
+
+}
+
 export class InvalidPathError extends CustomError {
   constructor (message, cause, currentCommand, invalidDirectory, attemptedFullPath) {
     super(message, cause, currentCommand)
@@ -27,14 +31,17 @@ export function setUserErrorStream (stream) {
 }
 export function parseError (e) {
   if (e instanceof InvalidPathError) {
-    e.message = `Cannot ${e.currentCommand} ${e.attemptedFullPath} - ${e.invalidDirectory} does not exist\n`
+    e.message = `Cannot ${e.currentCommand} ${e.attemptedFullPath} - ${e.invalidDirectory} does not exist`
   }
   if (e instanceof InvalidCommandError) {
     e.message = `'${e.currentCommand}' is not a valid command. Only the following are valid commands:\n  ${VALID_COMMANDS.join('\n  ')}`
   }
+  if (e instanceof IncompatibleNumberOfArgumentsError) {
+    e.message = e.message + '\nRefer to README for command examples.'
+  }
   if (e instanceof CustomError) {
     console.error('Error encountered, ', e)
-    userErrorStream.write(e.message)
+    userErrorStream.write(e.message + '\n')
   } else {
     throw e
   }
