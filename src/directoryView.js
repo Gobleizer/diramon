@@ -1,11 +1,18 @@
-const indentFormat = '  '
+export const INDENT_FORMAT = '  '
+
+let output = null
+
+export function setOutputStream (outputStream) {
+  output = outputStream
+}
 
 export default function printDirectory (directory, currentIndent = '') {
-  console.log(currentIndent + directory.name)
+  output.write(currentIndent + directory.name + '\n')
   if (directory.children.size > 0) {
-    currentIndent = currentIndent + indentFormat
-    directory.children.forEach((child) => {
-      printDirectory(child, currentIndent)
+    currentIndent = currentIndent + INDENT_FORMAT
+    const childNamesSorted = directory.getChildrenNamesAlphabetically()
+    childNamesSorted.forEach((childName) => {
+      printDirectory(directory.getChildByName(childName), currentIndent)
     })
   }
 }

@@ -26,6 +26,10 @@ class Directory {
   getChildByName (childName) {
     return this.children.get(childName)
   }
+
+  getChildrenNamesAlphabetically () {
+    return this.children.keys().toArray().sort()
+  }
 }
 
 function verifyPath (currentDirectory, directoryList, index = 0) {
@@ -93,9 +97,7 @@ export function moveDirectory (source, destination) {
 }
 
 export function listDirectories () {
-  if (root.children.size > 0) {
-    root.children.forEach((child) => printDirectory(child))
-  }
+  root.getChildrenNamesAlphabetically().forEach((childName) => printDirectory(root.getChildByName(childName)))
 }
 
 const root = new Directory('root')
