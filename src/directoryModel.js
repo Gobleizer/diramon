@@ -29,9 +29,7 @@ function verifyPath (currentDirectory, directoryList, index) {
   if (currentDirectory.hasChild(directoryList[index])) { //is folder valid?
     return verifyPath(currentDirectory.returnChild(directoryList[index]), directoryList, index + 1) //move to that folder
   } else {
-    if ((index + 1) === directoryList.length) { 
-      // is this last node? (to be created) //also if the nodes matched i.e. already existed then this will be last+1 and fail
-      //should probable have a better error 
+    if (index === directoryList.length) { 
       return true
     } else {
       return false //this path is not valid 
@@ -40,7 +38,7 @@ function verifyPath (currentDirectory, directoryList, index) {
 }
 
 function findDirectory (currentDirectory, directoryList, index) {
-  if (index + 1 === directoryList.length) {
+  if (index === directoryList.length) {
     return currentDirectory
   } else {
     return findDirectory(currentDirectory.returnChild(directoryList[index]), directoryList, index+1)
@@ -49,19 +47,29 @@ function findDirectory (currentDirectory, directoryList, index) {
 
 export function createDirectory (directoryPath) {
   //directoryPath = 'root/' + directoryPath
-  const directoryNodes = directoryPath.split('/')
+  const fullPath = directoryPath.split('/')
+  const directoryBasePath = fullPath.slice(0,-1)
   // verify path
-  if (verifyPath(root, directoryNodes, 0)) {
-    const newDirectoryName = directoryNodes.at(-1)
-    const baseDirectory = findDirectory(root, directoryNodes, 0)
+  if (verifyPath(root, directoryBasePath, 0)) {
+    const newDirectoryName = fullPath.at(-1)
+    const baseDirectory = findDirectory(root, directoryBasePath, 0)
     baseDirectory.addChild(newDirectoryName)
   } else {
     throw new CustomError(`${directoryPath} is not a valid path`)
   }
 }
 
-export function deleteDirectory (name) {
-
+export function deleteDirectory (directoryPath) {
+  const fullPath = directoryPath.split('/')
+  const directoryBasePath = fullPath.slice(0,-1)
+  // verify path
+  if (verifyPath(root, fullPath, 0)) {
+    const directoryForRemoval = fullPath.at(-1)
+    const baseDirectory = findDirectory(root, directoryBasePath, 0)
+    baseDirectory.removeChild(directoryForRemoval)
+  } else {
+    throw new CustomError(`${directoryPath} is not a valid path`)
+  }
 }
 
 export function moveDirectory (source, destination) {
