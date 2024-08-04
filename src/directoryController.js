@@ -1,5 +1,5 @@
 import { createDirectory, listDirectories, deleteDirectory, moveDirectory } from './directoryModel.js'
-import { CustomError } from './directoryError.js'
+import { InvalidCommandError } from './directoryError.js'
 
 const commandRouter = {
   create: createDirectory,
@@ -31,6 +31,6 @@ export function verifyCommand (command) {
   if (VALID_COMMANDS.includes(command)) {
     return command
   } else {
-    throw new CustomError(`${command} is not a valid command`)
+    throw new InvalidCommandError(`${command} is not a valid command`, `${command} is not a valid command`, command)
   }
 }

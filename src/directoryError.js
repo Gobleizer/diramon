@@ -1,3 +1,5 @@
+import { VALID_COMMANDS } from './directoryController.js'
+
 let userErrorStream = null
 
 export class CustomError extends Error {
@@ -6,6 +8,10 @@ export class CustomError extends Error {
     this.cause = cause
     this.currentCommand = currentCommand
   }
+}
+
+export class InvalidCommandError extends CustomError {
+
 }
 
 export class InvalidPathError extends CustomError {
@@ -22,6 +28,9 @@ export function setUserErrorStream (stream) {
 export function parseError (e) {
   if (e instanceof InvalidPathError) {
     e.message = `Cannot ${e.currentCommand} ${e.attemptedFullPath} - ${e.invalidDirectory} does not exist\n`
+  }
+  if (e instanceof InvalidCommandError) {
+    e.message = `'${e.currentCommand}' is not a valid command. Only the following are valid commands:\n  ${VALID_COMMANDS.join('\n  ')}`
   }
   if (e instanceof CustomError) {
     console.error('Error encountered, ', e)
