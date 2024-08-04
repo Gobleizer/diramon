@@ -2,20 +2,20 @@
   "name": "diramon",
   "packageManager": "yarn@4.4.0",
   "version": "1.0.0",
-  "main": "directories.js",
+  "main": "./src/index.js",
   "type": "module",
   "repository": {
     "url": "github.com/Gobleizer/diramon",
     "type": "git"
   },
   "scripts": {
-    "start": "node ./src/index.js",
+    "start": "NODE_ENV=production node ./src/index.js",
     "test": "node --experimental-vm-modules $(yarn bin jest) ./src/test/directory.test.js",
     "lint": "eslint ./src"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
-    "eslint": "^9.8.0",
+    "eslint": "^8.0.1",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
