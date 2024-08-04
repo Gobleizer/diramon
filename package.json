@@ -4,10 +4,6 @@
   "version": "1.0.0",
   "main": "./src/index.js",
   "type": "module",
-  "repository": {
-    "url": "github.com/Gobleizer/diramon",
-    "type": "git"
-  },
   "scripts": {
     "start": "NODE_ENV=production node ./src/index.js",
     "test": "node --experimental-vm-modules $(yarn bin jest) ./src/test/directory.test.js",
