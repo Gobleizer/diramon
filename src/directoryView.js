@@ -1,9 +1,11 @@
-export default function printDirectory (directory) {
-  console.log(directory.name)
+const indentFormat = '  '
+
+export default function printDirectory (directory, currentIndent = '') {
+  console.log(currentIndent + directory.name)
   if (directory.children.size > 0) {
-    console.log('  ')
+    currentIndent = currentIndent + indentFormat
     directory.children.forEach((child) => {
-      printDirectory(child)
+      printDirectory(child, currentIndent)
     })
   }
 }
