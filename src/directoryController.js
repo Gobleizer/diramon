@@ -1,10 +1,11 @@
-import { createDirectory, listDirectories, deleteDirectory } from './directoryModel.js'
+import { createDirectory, listDirectories, deleteDirectory, moveDirectory } from './directoryModel.js'
 import { CustomError } from './directoryError.js'
 
 const commandRouter = {
   create: createDirectory,
   list: listDirectories,
-  delete: deleteDirectory
+  delete: deleteDirectory,
+  move: moveDirectory
 }
 
 const validCommands = Object.keys(commandRouter)

@@ -7,53 +7,57 @@ class Directory {
     this.children = new Map([])
   }
 
-  addChild (childName) {
-    const childDirectory = new Directory(childName)
-    this.children.set(childName, childDirectory)
+  addChild (child) {
+    this.children.set(child.name, child)
   }
 
-  removeChild (childName) {
+  deleteChild (child) {
+    this.children.delete(child.childName)
+  }
+
+  deleteChildByName (childName) {
     this.children.delete(childName)
   }
 
-  hasChild (childName) {
+  hasChildByName (childName) {
     return this.children.has(childName)
   }
 
-  returnChild (childName) {
+  getChildByName (childName) {
     return this.children.get(childName)
   }
 }
 
-function verifyPath (currentDirectory, directoryList, index) {
-  if (currentDirectory.hasChild(directoryList[index])) { //is folder valid?
-    return verifyPath(currentDirectory.returnChild(directoryList[index]), directoryList, index + 1) //move to that folder
+function verifyPath (currentDirectory, directoryList, index = 0) {
+  if (currentDirectory.hasChildByName(directoryList[index])) { // is folder valid?
+    return verifyPath(currentDirectory.getChildByName(directoryList[index]), directoryList, index + 1) // move to that folder
   } else {
-    if (index === directoryList.length) { 
+    if (index === directoryList.length) {
       return true
     } else {
-      return false //this path is not valid 
+      return false // this path is not valid
     }
   }
 }
 
-function findDirectory (currentDirectory, directoryList, index) {
+function findDirectory (currentDirectory, directoryList, index = 0) {
   if (index === directoryList.length) {
     return currentDirectory
   } else {
-    return findDirectory(currentDirectory.returnChild(directoryList[index]), directoryList, index+1)
+    return findDirectory(currentDirectory.getChildByName(directoryList[index]), directoryList, index + 1)
   }
 }
 
 export function createDirectory (directoryPath) {
-  //directoryPath = 'root/' + directoryPath
+  // directoryPath = 'root/' + directoryPath
   const fullPath = directoryPath.split('/')
-  const directoryBasePath = fullPath.slice(0,-1)
+  const directoryBasePath = fullPath.slice(0, -1)
   // verify path
-  if (verifyPath(root, directoryBasePath, 0)) {
+  if (verifyPath(root, directoryBasePath)) {
     const newDirectoryName = fullPath.at(-1)
-    const baseDirectory = findDirectory(root, directoryBasePath, 0)
-    baseDirectory.addChild(newDirectoryName)
+    const baseDirectory = findDirectory(root, directoryBasePath)
+    const newDirectory = new Directory(newDirectoryName)
+    baseDirectory.addChild(newDirectory)
   } else {
     throw new CustomError(`${directoryPath} is not a valid path`)
   }
@@ -61,19 +65,31 @@ export function createDirectory (directoryPath) {
 
 export function deleteDirectory (directoryPath) {
   const fullPath = directoryPath.split('/')
-  const directoryBasePath = fullPath.slice(0,-1)
+  const directoryBasePath = fullPath.slice(0, -1)
   // verify path
   if (verifyPath(root, fullPath, 0)) {
     const directoryForRemoval = fullPath.at(-1)
-    const baseDirectory = findDirectory(root, directoryBasePath, 0)
-    baseDirectory.removeChild(directoryForRemoval)
+    const baseDirectory = findDirectory(root, directoryBasePath)
+    baseDirectory.deleteChildByName(directoryForRemoval)
   } else {
     throw new CustomError(`${directoryPath} is not a valid path`)
   }
 }
 
 export function moveDirectory (source, destination) {
-
+  const sourcePath = source.split('/')
+  const sourceDirectoryBasePath = sourcePath.slice(0, -1)
+  const destinationPath = destination.split('/')
+  if (verifyPath(root, sourcePath) && verifyPath(root, destinationPath)) {
+    const directoryToMoveName = sourcePath.at(-1)
+    const sourceBaseDirectory = findDirectory(root, sourceDirectoryBasePath)
+    const directoryToMove = sourceBaseDirectory.getChildByName(directoryToMoveName)
+    sourceBaseDirectory.deleteChildByName(directoryToMoveName)
+    const destinationDirectory = findDirectory(root, destinationPath)
+    destinationDirectory.addChild(directoryToMove)
+  } else {
+    throw new CustomError('This move is Invalid')
+  }
 }
 
 export function listDirectories () {
