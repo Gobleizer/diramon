@@ -1,5 +1,5 @@
 import printDirectory from './directoryView.js'
-import { CustomError } from './directoryError.js'
+import { InvalidPathError } from './directoryError.js'
 
 class Directory {
   constructor (name) {
@@ -33,13 +33,13 @@ class Directory {
 }
 
 function verifyPath (currentDirectory, directoryList, index = 0) {
-  if (currentDirectory.hasChildByName(directoryList[index])) { // is folder valid?
-    return verifyPath(currentDirectory.getChildByName(directoryList[index]), directoryList, index + 1) // move to that folder
+  if (currentDirectory.hasChildByName(directoryList[index])) {
+    return verifyPath(currentDirectory.getChildByName(directoryList[index]), directoryList, index + 1)
   } else {
     if (index === directoryList.length) {
       return true
     } else {
-      return false // this path is not valid
+      throw new InvalidPathError(`${currentDirectory.name} is not a valid directory`, `${currentDirectory.name} is not a valid directory`, 'unknown', directoryList[index], directoryList.join('/'))
     }
   }
 }
@@ -53,30 +53,41 @@ function findDirectory (currentDirectory, directoryList, index = 0) {
 }
 
 export function createDirectory (directoryPath) {
-  // directoryPath = 'root/' + directoryPath
   const fullPath = directoryPath.split('/')
   const directoryBasePath = fullPath.slice(0, -1)
-  // verify path
-  if (verifyPath(root, directoryBasePath)) {
+  try {
+    verifyPath(root, directoryBasePath)
     const newDirectoryName = fullPath.at(-1)
     const baseDirectory = findDirectory(root, directoryBasePath)
     const newDirectory = new Directory(newDirectoryName)
     baseDirectory.addChild(newDirectory)
-  } else {
-    throw new CustomError(`${directoryPath} is not a valid path`)
+  } catch (e) {
+    if (e instanceof InvalidPathError) {
+      e.attemptedFullPath = directoryPath
+      e.currentCommand = 'create'
+      throw e
+    } else {
+      throw e
+    }
   }
 }
 
 export function deleteDirectory (directoryPath) {
   const fullPath = directoryPath.split('/')
   const directoryBasePath = fullPath.slice(0, -1)
-  // verify path
-  if (verifyPath(root, fullPath, 0)) {
+  try {
+    verifyPath(root, fullPath, 0)
     const directoryForRemoval = fullPath.at(-1)
     const baseDirectory = findDirectory(root, directoryBasePath)
     baseDirectory.deleteChildByName(directoryForRemoval)
-  } else {
-    throw new CustomError(`${directoryPath} is not a valid path`)
+  } catch (e) {
+    if (e instanceof InvalidPathError) {
+      e.attemptedFullPath = directoryPath
+      e.currentCommand = 'delete'
+      throw e
+    } else {
+      throw e
+    }
   }
 }
 
@@ -84,15 +95,22 @@ export function moveDirectory (source, destination) {
   const sourcePath = source.split('/')
   const sourceDirectoryBasePath = sourcePath.slice(0, -1)
   const destinationPath = destination.split('/')
-  if (verifyPath(root, sourcePath) && verifyPath(root, destinationPath)) {
+  try {
+    verifyPath(root, sourcePath)
+    verifyPath(root, destinationPath)
     const directoryToMoveName = sourcePath.at(-1)
     const sourceBaseDirectory = findDirectory(root, sourceDirectoryBasePath)
     const directoryToMove = sourceBaseDirectory.getChildByName(directoryToMoveName)
     sourceBaseDirectory.deleteChildByName(directoryToMoveName)
     const destinationDirectory = findDirectory(root, destinationPath)
     destinationDirectory.addChild(directoryToMove)
-  } else {
-    throw new CustomError('This move is Invalid')
+  } catch (e) {
+    if (e instanceof InvalidPathError) {
+      e.currentCommand = 'move'
+      throw e
+    } else {
+      throw e
+    }
   }
 }
 
@@ -101,4 +119,3 @@ export function listDirectories () {
 }
 
 const root = new Directory('root')
-// handle errors

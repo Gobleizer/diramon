@@ -8,7 +8,7 @@ const commandRouter = {
   move: moveDirectory
 }
 
-const validCommands = Object.keys(commandRouter)
+export const VALID_COMMANDS = Object.keys(commandRouter)
 
 export function parseCommand (command) {
   const words = findWords(command)
@@ -26,9 +26,9 @@ function findWords (line) {
   return words
 }
 
-function verifyCommand (command) {
+export function verifyCommand (command) {
   command = command.toLowerCase()
-  if (validCommands.includes(command)) {
+  if (VALID_COMMANDS.includes(command)) {
     return command
   } else {
     throw new CustomError(`${command} is not a valid command`)
