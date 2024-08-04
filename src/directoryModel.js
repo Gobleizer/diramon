@@ -2,6 +2,8 @@ import Directory from './directoryClass.js'
 import printDirectory from './directoryView.js'
 import { InvalidPathError } from './directoryError.js'
 
+const root = new Directory('root')
+
 function verifyPath (currentDirectory, directoryList, index = 0) {
   if (currentDirectory.hasChildByName(directoryList[index])) {
     return verifyPath(currentDirectory.getChildByName(directoryList[index]), directoryList, index + 1)
@@ -87,5 +89,3 @@ export function moveDirectory (source, destination) {
 export function listDirectories () {
   root.getChildrenNamesAlphabetically().forEach((childName) => printDirectory(root.getChildByName(childName)))
 }
-
-const root = new Directory('root')
